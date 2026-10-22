@@ -393,7 +393,7 @@ export function WorksWheel({
           </div>
         )}
         <h3
-          className="tracking-tight font-display font-bold text-2xl lg:text-3xl text-[#0A0A0A] leading-tight"
+          className="tracking-[-0.015em] font-display font-semibold text-2xl lg:text-3xl text-[#0A0A0A] leading-tight"
         >
           {items[active]?.title}
         </h3>

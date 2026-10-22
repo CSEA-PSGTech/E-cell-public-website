@@ -60,7 +60,7 @@ export default function ProjectPreview() {
             <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-[#2547FF]">
               Innovation Showcase
             </span>
-            <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-[#0A0A0A]">
+            <h2 className="text-xl lg:text-2xl font-display font-semibold tracking-[-0.015em] text-[#0A0A0A]">
               Featured Projects
             </h2>
           </div>

@@ -130,7 +130,7 @@ export function ContactSection({ id = "contact", className = "" }: ContactSectio
               <div className="w-14 h-14 rounded-full bg-[#EDEFFC] text-[#2547FF] border border-[#2547FF]/20 flex items-center justify-center shadow-xs">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="font-display font-normal text-2xl text-[#0A0A0A]">
+              <h3 className="font-display font-semibold text-2xl text-[#0A0A0A] tracking-[-0.015em]">
                 Message Received!
               </h3>
               <p className="font-sans text-sm text-[#262626]/75 max-w-xs leading-[1.6]">
@@ -146,7 +146,7 @@ export function ContactSection({ id = "contact", className = "" }: ContactSectio
               </Button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="w-full space-y-4">
+            <form onSubmit={handleSubmit} className="w-full space-y-4 legacy-form-scope">
               {apiError && (
                 <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5 animate-fadeIn">
                   <AlertCircle className="w-4 h-4 shrink-0 text-red-500 mt-0.5" />

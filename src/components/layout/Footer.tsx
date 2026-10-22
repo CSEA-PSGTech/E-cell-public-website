@@ -63,7 +63,7 @@ export default function Footer() {
                 className="h-11 sm:h-12 w-auto object-contain rounded-xl border border-black/[0.08] bg-white p-1 shadow-2xs"
               />
               <div className="flex flex-col">
-                <span className="font-display text-xl sm:text-2xl tracking-tight text-[#0A0A0A] flex items-center gap-1 leading-tight">
+                <span className="font-display font-bold text-xl sm:text-2xl tracking-tight text-[#0A0A0A] flex items-center gap-1 leading-tight">
                   E-CELL<span className="text-[#2547FF]">.</span>
                 </span>
                 <span className="font-mono text-[9.5px] sm:text-[10px] tracking-[0.22em] text-[#262626]/55 uppercase">
@@ -73,7 +73,7 @@ export default function Footer() {
             </Link>
 
             {/* Catchphrase */}
-            <p className="mt-5 text-[15.5px] sm:text-[17px] lg:text-[18px] font-medium text-[#0A0A0A] tracking-tight leading-snug sm:leading-relaxed max-w-lg">
+            <p className="mt-5 text-[15.5px] sm:text-[17px] lg:text-[18px] font-display italic font-medium text-[#0A0A0A] tracking-tight leading-snug sm:leading-relaxed max-w-lg">
               “Where curiosity meets capital and code meets commerce.”
             </p>
 

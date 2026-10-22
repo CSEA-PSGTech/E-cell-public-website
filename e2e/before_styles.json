@@ -1,0 +1,167 @@
+{
+  "partnerForm": [
+    {
+      "description": "Heading above partner form",
+      "fontFamily": "Cambon, \"Times New Roman\", serif",
+      "fontSize": "40px",
+      "fontWeight": "700",
+      "letterSpacing": "-1px",
+      "lineHeight": "40px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Subtitle below partner form heading",
+      "fontFamily": "Geist, Sohne, ui-sans-serif, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "24px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Step title label",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "12px",
+      "fontWeight": "600",
+      "letterSpacing": "normal",
+      "lineHeight": "16px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Step content title (Company Info)",
+      "fontFamily": "Cambon, \"Times New Roman\", serif",
+      "fontSize": "24px",
+      "fontWeight": "700",
+      "letterSpacing": "normal",
+      "lineHeight": "32px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Field label (Company Name)",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "12px",
+      "fontWeight": "600",
+      "letterSpacing": "0.6px",
+      "lineHeight": "16px",
+      "textTransform": "uppercase"
+    },
+    {
+      "description": "Input field (companyName)",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Helper text",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "24px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Select dropdown",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Back button",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Continue button",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Stepper counter (Step 1 of 5)",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    }
+  ],
+  "contactForm": [
+    {
+      "description": "Heading above contact form (Get in Touch)",
+      "fontFamily": "Cambon, \"Times New Roman\", serif",
+      "fontSize": "44px",
+      "fontWeight": "700",
+      "letterSpacing": "-1.1px",
+      "lineHeight": "40px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Description below contact heading",
+      "fontFamily": "Geist, Sohne, ui-sans-serif, sans-serif",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "24px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Contact field label (Full Name)",
+      "fontFamily": "\"Sohne Mono\", ui-monospace, monospace",
+      "fontSize": "12px",
+      "fontWeight": "600",
+      "letterSpacing": "0.6px",
+      "lineHeight": "16px",
+      "textTransform": "uppercase"
+    },
+    {
+      "description": "Contact input (fullName)",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Contact textarea (message)",
+      "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "400",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    },
+    {
+      "description": "Contact submit button",
+      "fontFamily": "Geist, Sohne, ui-sans-serif, sans-serif",
+      "fontSize": "14px",
+      "fontWeight": "500",
+      "letterSpacing": "normal",
+      "lineHeight": "20px",
+      "textTransform": "none"
+    }
+  ],
+  "placeholderStyle": {
+    "fontFamily": "Geist, Sohne, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif",
+    "fontSize": "14px",
+    "fontWeight": "400",
+    "letterSpacing": "normal",
+    "lineHeight": "normal",
+    "textTransform": "none"
+  }
+}

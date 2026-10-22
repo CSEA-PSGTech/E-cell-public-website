@@ -12,11 +12,11 @@ export interface SelectProps
 const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, error, children, options, placeholder, ...props }, ref) => {
     return (
-      <div className="w-full relative">
+      <div className="w-full relative legacy-form-scope">
         <div className="relative">
           <select
             className={cn(
-              "flex h-11 w-full appearance-none rounded-xl border bg-surface px-3.5 pr-10 py-2 text-sm text-foreground transition-all duration-200",
+              "flex h-11 w-full appearance-none rounded-xl border bg-surface px-3.5 pr-10 py-2 text-sm text-foreground transition-all duration-200 legacy-form-scope",
               "focus:outline-none border-border focus:border-primary focus:ring-2 focus:ring-primary/15 shadow-sm cursor-pointer",
               "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-muted/40",
               error && "border-destructive focus:border-destructive focus:ring-destructive/15",

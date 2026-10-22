@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Neuton:ital,wght@0,200;0,300;0,400;0,700;0,800;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Neuton:ital,wght@0,200;0,300;0,400;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,9 +14,13 @@
     --text-secondary: #262626;
     --border: #E5E5E7;
 
-    --font-display: "Cambon", "Neuton", "Times New Roman", serif;
-    --font-sans: "Geist", "Sohne", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "Sohne Mono", ui-monospace, monospace;
+
+    --font-form-legacy-sans: "Geist", "Sohne", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-form-legacy-display: "Cambon", "Times New Roman", serif;
+    --font-form-legacy-mono: "Sohne Mono", ui-monospace, monospace;
 
     --font-weight-light: 300;
     --font-weight-regular: 400;
@@ -82,17 +86,19 @@
   .display-heading {
     font-family: var(--font-display);
     font-size: var(--text-3xl);
-    font-weight: var(--font-weight-regular);
-    line-height: var(--leading-display);
-    letter-spacing: -0.035em;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: lining-nums;
   }
 
   .section-heading {
     font-family: var(--font-display);
     font-size: var(--text-2xl);
-    font-weight: var(--font-weight-regular);
-    line-height: 1.1;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-variant-numeric: lining-nums;
   }
 
   .eyebrow,
@@ -116,6 +122,30 @@
     font-size: var(--text-xs);
     font-weight: var(--font-weight-regular);
     line-height: 1.5;
+  }
+
+  /* Form Legacy Protection Scope */
+  .legacy-form-scope,
+  .legacy-form-scope input,
+  .legacy-form-scope select,
+  .legacy-form-scope textarea,
+  .legacy-form-scope button {
+    font-family: var(--font-form-legacy-sans) !important;
+  }
+
+  .legacy-form-scope .font-sans,
+  .legacy-form-scope [class*="font-sans"] {
+    font-family: "Geist", "Sohne", ui-sans-serif, sans-serif !important;
+  }
+
+  .legacy-form-scope .font-display,
+  .legacy-form-scope [class*="font-display"] {
+    font-family: var(--font-form-legacy-display) !important;
+  }
+
+  .legacy-form-scope .font-mono,
+  .legacy-form-scope [class*="font-mono"] {
+    font-family: var(--font-form-legacy-mono) !important;
   }
 }
 

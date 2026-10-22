@@ -131,7 +131,7 @@ export default function Collaboration({ id = "collaboration" }: { id?: string })
       <div ref={formCardRef} className="max-w-4xl mx-auto flex flex-col items-center w-full">
         {/* Streamlined Clean Header */}
         <div className="text-center max-w-2xl mb-3 sm:mb-4">
-          <h1 className="font-display font-bold text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-[-0.025em] text-[#0A0A0A] leading-[1.15]">
+          <h1 className="font-display font-semibold text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-[-0.015em] text-[#0A0A0A] leading-[1.15]">
             Let’s Build <span className="text-[#2547FF]">Together</span>
           </h1>
 
@@ -141,7 +141,7 @@ export default function Collaboration({ id = "collaboration" }: { id?: string })
         </div>
 
         {/* Form Wizard or Post-Submission Result */}
-        <div className="w-full">
+        <div className="w-full legacy-form-scope">
           {submitError && !isSubmitted && (
             <div
               className="mb-4 p-4 rounded-xl border border-red-500/20 bg-red-50/90 text-red-800 text-xs sm:text-sm flex items-start gap-2.5 animate-fadeIn shadow-xs"

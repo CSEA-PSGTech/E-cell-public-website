@@ -171,7 +171,7 @@ export default function Projects() {
         <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#2547FF] mb-2 block">
           INNOVATION CATALOG
         </span>
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#0A0A0A] mb-3 sm:mb-4">
+        <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-[-0.015em] text-[#0A0A0A] mb-3 sm:mb-4">
           Our <span className="text-[#2547FF]">Projects</span>
         </h1>
         <p className="text-sm lg:text-base text-[#0A0A0A]/65 max-w-xl mx-auto leading-relaxed font-sans px-2">

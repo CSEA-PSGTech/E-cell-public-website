@@ -49,20 +49,27 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
   const activeProject = projects[currentIndex] || projects[0];
 
   return (
-    <div className="w-full min-h-[100dvh] flex flex-col justify-center items-center py-3 sm:py-6 px-4 sm:px-8 max-w-lg mx-auto select-none gap-3 sm:gap-5">
-      {/* 1. Section Heading: "Our Projects" */}
-      <div className="text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-[-0.02em] text-[#0A0A0A]">
-          Our <span className="text-[#2547FF] font-normal">Projects</span>
-        </h2>
+    <div className="w-full min-h-[100dvh] flex flex-col justify-between items-center py-6 sm:py-8 px-4 sm:px-8 max-w-lg md:max-w-3xl lg:max-w-4xl mx-auto select-none relative">
+      {/* 1. Top-Left Section Heading: Matches Desktop & Team Section */}
+      <div className="w-full flex items-start justify-between pt-1 sm:pt-2 px-1">
+        <div className="flex flex-col items-start gap-1 text-left">
+          <span className="font-mono text-[11px] sm:text-xs md:text-sm font-semibold uppercase tracking-[0.22em] text-[#2547FF]">
+            Innovation Showcase
+          </span>
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-[-0.015em] text-[#0A0A0A]">
+            Featured Projects
+          </h2>
+        </div>
       </div>
 
-      {/* 2. 3D Peek-Card Carousel Container */}
-      <div
-        className="relative w-full h-[200px] sm:h-[260px] md:h-[290px] flex items-center justify-center overflow-hidden touch-pan-y"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
+      {/* Middle Cluster: 3D Carousel + Captions + Navigation Controls with neat, tight spacing */}
+      <div className="w-full flex flex-col items-center justify-center gap-3 sm:gap-4 my-auto py-2">
+        {/* 2. 3D Peek-Card Carousel Container */}
+        <div
+          className="relative w-full h-[200px] sm:h-[260px] md:h-[370px] lg:h-[400px] flex items-center justify-center overflow-hidden touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
         {projects.map((project, idx) => {
           // Calculate circular relative distance from current index
           const count = projects.length;
@@ -99,7 +106,7 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
           return (
             <motion.div
               key={project.slug}
-              className="absolute w-[72%] sm:w-[60%] md:w-[54%] aspect-[1.5] max-w-[360px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer shadow-lg bg-[#0A0A0A] [isolation:isolate] [transform:translateZ(0)]"
+              className="absolute w-[72%] sm:w-[60%] md:w-[62%] aspect-[1.5] max-w-[360px] md:max-w-[500px] rounded-2xl sm:rounded-3xl md:rounded-[28px] overflow-hidden cursor-pointer shadow-lg md:shadow-2xl bg-[#0A0A0A] [isolation:isolate] [transform:translateZ(0)]"
               style={{
                 WebkitMaskImage: "-webkit-radial-gradient(white, black)",
               }}
@@ -134,8 +141,8 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
 
               {/* Center Card "CLICK TO VIEW" Bottom Overlay */}
               {isCenter && (
-                <div className="absolute inset-x-0 bottom-0 pt-10 pb-3 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex items-center justify-center pointer-events-none rounded-b-[inherit]">
-                  <span className="text-[10px] sm:text-xs font-semibold tracking-wider text-white uppercase drop-shadow-sm">
+                <div className="absolute inset-x-0 bottom-0 pt-10 pb-3 md:pb-4 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex items-center justify-center pointer-events-none rounded-b-[inherit]">
+                  <span className="text-[10px] sm:text-xs md:text-sm font-semibold tracking-wider text-white uppercase drop-shadow-sm">
                     Click to view
                   </span>
                 </div>
@@ -146,7 +153,7 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
       </div>
 
       {/* 3. Dynamic Captions: Title & 2-Line Description */}
-      <div className="text-center px-4 min-h-[52px] sm:min-h-[60px] flex flex-col items-center justify-center max-w-sm">
+      <div className="text-center px-4 min-h-[52px] sm:min-h-[60px] md:min-h-[76px] flex flex-col items-center justify-center max-w-sm sm:max-w-md md:max-w-xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeProject.slug}
@@ -156,10 +163,15 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="flex flex-col items-center"
           >
-            <h3 className="font-semibold text-base sm:text-lg text-[#0A0A0A] tracking-tight">
+            {activeProject.domain && (
+              <span className="font-mono text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2547FF] mb-0.5 sm:mb-1">
+                {activeProject.domain}
+              </span>
+            )}
+            <h3 className="font-semibold text-base sm:text-lg md:text-2xl text-[#0A0A0A] tracking-tight">
               {activeProject.title}
             </h3>
-            <p className="text-xs sm:text-sm text-[#0A0A0A]/65 mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs sm:text-sm md:text-base text-[#0A0A0A]/65 mt-1 sm:mt-1.5 line-clamp-2 leading-relaxed">
               {activeProject.description}
             </p>
           </motion.div>
@@ -167,35 +179,36 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
       </div>
 
       {/* 4. Navigation Controls: < [Counter] > */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 md:gap-6">
         <button
           type="button"
           onClick={handlePrev}
-          className="w-8 h-8 rounded-full bg-black/[0.06] hover:bg-black/[0.1] active:scale-90 flex items-center justify-center text-[#0A0A0A] transition-all cursor-pointer"
+          className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/[0.06] hover:bg-black/[0.1] active:scale-90 flex items-center justify-center text-[#0A0A0A] transition-all cursor-pointer"
           aria-label="Previous project"
         >
-          <ChevronLeft className="w-4 h-4 text-[#0A0A0A]" />
+          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-[#0A0A0A]" />
         </button>
 
-        <span className="font-mono text-xs text-[#0A0A0A]/70 font-medium tracking-wider min-w-[50px] text-center">
+        <span className="font-mono text-xs md:text-sm text-[#0A0A0A]/70 font-medium tracking-wider min-w-[50px] md:min-w-[64px] text-center">
           {String(currentIndex + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
         </span>
 
         <button
           type="button"
           onClick={handleNext}
-          className="w-8 h-8 rounded-full bg-black/[0.06] hover:bg-black/[0.1] active:scale-90 flex items-center justify-center text-[#0A0A0A] transition-all cursor-pointer"
+          className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/[0.06] hover:bg-black/[0.1] active:scale-90 flex items-center justify-center text-[#0A0A0A] transition-all cursor-pointer"
           aria-label="Next project"
         >
-          <ChevronRight className="w-4 h-4 text-[#0A0A0A]" />
+          <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-[#0A0A0A]" />
         </button>
+      </div>
       </div>
 
       {/* 5. Bottom Action Buttons: Sleek pair matching Team Section across all views */}
-      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3.5 px-4 max-w-sm sm:max-w-none mx-auto">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-3.5 md:gap-4 px-4 max-w-sm sm:max-w-none mx-auto md:pb-2">
         <Link
           to="/projects"
-          className="w-auto h-11 sm:h-12 px-6 sm:px-7 rounded-full inline-flex items-center justify-center gap-2.5 text-xs sm:text-sm font-sans font-semibold uppercase tracking-[0.06em] text-white bg-[#2547FF] hover:bg-[#1B3AE5] border border-[#2547FF] shadow-xs hover:shadow-lg hover:shadow-[#2547FF]/25 active:scale-95 transition-all group cursor-pointer text-center"
+          className="w-auto h-11 sm:h-12 md:h-12 px-6 sm:px-7 md:px-8 rounded-full inline-flex items-center justify-center gap-2.5 text-xs sm:text-sm md:text-sm font-sans font-semibold uppercase tracking-[0.06em] text-white bg-[#2547FF] hover:bg-[#1B3AE5] border border-[#2547FF] shadow-xs hover:shadow-lg hover:shadow-[#2547FF]/25 active:scale-95 transition-all group cursor-pointer text-center"
         >
           <span>View All Projects</span>
           <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -206,7 +219,7 @@ export default function PrismProjectShowcase({ limit = 6 }: PrismProjectShowcase
           onClick={() => {
             document.getElementById("team")?.scrollIntoView({ behavior: "smooth" });
           }}
-          className="w-auto h-11 sm:h-12 px-6 sm:px-7 rounded-full inline-flex items-center justify-center gap-2.5 text-xs sm:text-sm font-sans font-semibold uppercase tracking-[0.06em] text-[#0A0A0A] hover:text-[#2547FF] bg-white/95 hover:bg-white border border-black/10 hover:border-[#2547FF]/40 shadow-xs hover:shadow-md active:scale-95 transition-all group cursor-pointer backdrop-blur-md text-center"
+          className="w-auto h-11 sm:h-12 md:h-12 px-6 sm:px-7 md:px-8 rounded-full inline-flex items-center justify-center gap-2.5 text-xs sm:text-sm md:text-sm font-sans font-semibold uppercase tracking-[0.06em] text-[#0A0A0A] hover:text-[#2547FF] bg-white/95 hover:bg-white border border-black/10 hover:border-[#2547FF]/40 shadow-xs hover:shadow-md active:scale-95 transition-all group cursor-pointer backdrop-blur-md text-center"
         >
           <span>Meet The Team</span>
           <ArrowDown className="w-4 h-4 text-[#2547FF] transition-transform group-hover:translate-y-0.5" />

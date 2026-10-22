@@ -34,8 +34,8 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Cambon"', '"Times New Roman"', 'serif'],
-        sans: ['"Geist"', '"Sohne"', 'ui-sans-serif', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        display: ['"Playfair Display"', 'Georgia', '"Times New Roman"', 'serif'],
         mono: ['"Sohne Mono"', 'ui-monospace', 'monospace'],
         cambon: ['"Cambon"', '"Times New Roman"', 'serif'],
         sohne: ['"Sohne"', '"Geist"', 'ui-sans-serif', 'sans-serif'],

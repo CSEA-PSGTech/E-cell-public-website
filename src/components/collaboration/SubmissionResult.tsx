@@ -39,7 +39,7 @@ export function SubmissionResult({
             <span>Reference: {displayRefId}</span>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-bold font-display text-foreground">
+          <h2 className="text-2xl sm:text-3xl font-semibold font-display tracking-[-0.015em] text-foreground">
             Collaboration Request Received!
           </h2>
 

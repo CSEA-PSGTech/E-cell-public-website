@@ -73,7 +73,7 @@ export default function ProjectDetail() {
         </div>
 
         {/* Title & Tagline */}
-        <h1 className="font-display font-normal text-3xl sm:text-4xl md:text-5xl lg:text-[64px] text-[#0A0A0A] tracking-[-0.035em] leading-[1.05]">
+        <h1 className="font-display font-semibold text-3xl sm:text-4xl md:text-5xl lg:text-[64px] text-[#0A0A0A] tracking-[-0.02em] leading-[1.05]">
           {project.title}
         </h1>
         {project.tagline && (

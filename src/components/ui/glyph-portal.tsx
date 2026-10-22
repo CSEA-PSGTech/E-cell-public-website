@@ -43,7 +43,7 @@ const smooth = (a: number, b: number, n: number) => {
   const t = clamp((n - a) / (b - a));
   return t * t * (3 - 2 * t);
 };
-const DEFAULT_FONT = '"Plus Jakarta Sans", "Inter", "Arial Black", Arial, sans-serif';
+const DEFAULT_FONT = '"Playfair Display", "Inter", Georgia, "Times New Roman", serif';
 type Ink = { x: number; y: number; radius: number; index: number };
 type Letter = { index: number; x: number; y: number; width: number; height: number };
 

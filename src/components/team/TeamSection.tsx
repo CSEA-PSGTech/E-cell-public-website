@@ -101,6 +101,16 @@ export function TeamSection({
 
   const [isDragging, setIsDragging] = useState(false);
 
+  // Mobile touch swipe & drag tracking
+  const isTouchDownRef = useRef(false);
+  const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const touchScrollLeftRef = useRef(0);
+  const touchLastXRef = useRef(0);
+  const touchLastTimeRef = useRef(0);
+  const touchVelocityRef = useRef(0);
+  const isSwipingHorizontallyRef = useRef(false);
+
   // Triple items for seamless infinite continuous scroll
   const tripledMembers = React.useMemo(
     () => [...members, ...members, ...members],
@@ -236,7 +246,8 @@ export function TeamSection({
         selectedMemberName === null // Frozen when a card is selected on mobile
       ) {
         const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-        const speed = isMobile ? 0.4 : 0.55; // Increased by 20% on mobile (0.28 -> 0.336); laptop untouched
+        // Increased speed by 15% (Desktop: 0.55 -> 0.6325, Mobile: 0.40 -> 0.46)
+        const speed = isMobile ? 0.60 : 0.6325;
 
         scrollPosRef.current += speed;
         container.scrollLeft = scrollPosRef.current;
@@ -340,18 +351,108 @@ export function TeamSection({
     setIsDragging(true);
   };
 
-  const handleContainerTouchStart = () => {
-    isPausedRef.current = true;
+  const handleContainerTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length !== 1) return;
+    const touch = e.touches[0];
+    const container = containerRef.current;
+    if (!container) return;
+
     if (momentumRafRef.current) {
       cancelAnimationFrame(momentumRafRef.current);
       momentumRafRef.current = null;
     }
+    if (autoScrollTimerRef.current) {
+      clearTimeout(autoScrollTimerRef.current);
+    }
+
+    isPausedRef.current = true;
+    isTouchDownRef.current = true;
+    touchStartXRef.current = touch.clientX;
+    touchStartYRef.current = touch.clientY;
+    touchScrollLeftRef.current = container.scrollLeft;
+    touchLastXRef.current = touch.clientX;
+    touchLastTimeRef.current = performance.now();
+    touchVelocityRef.current = 0;
+    isSwipingHorizontallyRef.current = false;
+  };
+
+  const handleContainerTouchMove = (e: React.TouchEvent) => {
+    if (!isTouchDownRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const touch = e.touches[0];
+    const dx = touch.clientX - touchStartXRef.current;
+    const dy = touch.clientY - touchStartYRef.current;
+
+    // Detect gesture direction if not yet decided
+    if (!isSwipingHorizontallyRef.current) {
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 6) {
+        isSwipingHorizontallyRef.current = true;
+        clearSelection();
+      } else if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {
+        // Vertical page scroll: don't hijack
+        isTouchDownRef.current = false;
+        return;
+      }
+    }
+
+    if (isSwipingHorizontallyRef.current) {
+      container.scrollLeft = touchScrollLeftRef.current - dx;
+      scrollPosRef.current = container.scrollLeft;
+
+      const now = performance.now();
+      const dt = now - touchLastTimeRef.current;
+      if (dt > 0) {
+        touchVelocityRef.current = (touch.clientX - touchLastXRef.current) / dt;
+      }
+      touchLastXRef.current = touch.clientX;
+      touchLastTimeRef.current = now;
+    }
   };
 
   const handleContainerTouchEnd = () => {
-    // Only schedule resume if no card is actively selected or held
-    if (!selectedMemberName && !isHoldingRef.current) {
-      scheduleAutoScrollResume(1800);
+    if (!isTouchDownRef.current && !isSwipingHorizontallyRef.current) {
+      if (!selectedMemberName && !isHoldingRef.current) {
+        scheduleAutoScrollResume(1800);
+      }
+      return;
+    }
+
+    isTouchDownRef.current = false;
+    const wasSwiping = isSwipingHorizontallyRef.current;
+    isSwipingHorizontallyRef.current = false;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    if (wasSwiping) {
+      clearSelection();
+      let vel = touchVelocityRef.current * 14;
+      const friction = 0.94;
+
+      const momentumStep = () => {
+        if (Math.abs(vel) < 0.2 || isDownRef.current || isHoveredRef.current || isTouchDownRef.current) {
+          scheduleAutoScrollResume(2000);
+          return;
+        }
+        if (container) {
+          container.scrollLeft -= vel;
+          scrollPosRef.current = container.scrollLeft;
+        }
+        vel *= friction;
+        momentumRafRef.current = requestAnimationFrame(momentumStep);
+      };
+
+      if (Math.abs(vel) > 0.4) {
+        momentumRafRef.current = requestAnimationFrame(momentumStep);
+      } else {
+        scheduleAutoScrollResume(2000);
+      }
+    } else {
+      if (!selectedMemberName && !isHoldingRef.current) {
+        scheduleAutoScrollResume(1800);
+      }
     }
   };
 
@@ -371,7 +472,6 @@ export function TeamSection({
     }
 
     wasAlreadySelectedRef.current = selectedMemberName === memberName;
-    setSelectedMemberName(memberName);
   };
 
   // Interaction 5: Swipe Detection: Swiping horizontally cancels selection immediately
@@ -382,11 +482,9 @@ export function TeamSection({
     const dx = Math.abs(touch.clientX - touchStartPosRef.current.x);
     const dy = Math.abs(touch.clientY - touchStartPosRef.current.y);
 
-    // If movement exceeds 10px, this is a swipe/scroll gesture, NOT a card tap or hold
-    if (dx > 10 || dy > 10) {
+    if (dx > 6 || dy > 6) {
       touchMovedRef.current = true;
       isHoldingRef.current = false;
-      // Immediately cancel card selection so scrolling is uninterrupted
       clearSelection();
     }
   };
@@ -399,7 +497,6 @@ export function TeamSection({
     // If user was swiping to scroll, do not select card
     if (touchMovedRef.current) {
       clearSelection();
-      scheduleAutoScrollResume(1500);
       return;
     }
 
@@ -431,17 +528,21 @@ export function TeamSection({
       className={`relative w-full min-h-[100dvh] flex flex-col justify-center overflow-hidden bg-transparent py-8 sm:py-12 text-[#0A0A0A] scroll-mt-0 ${className}`}
       aria-labelledby="team-heading"
     >
-      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 w-full">
+      {/* Top-Left Section Heading: MEMBERS OF E-CELL */}
+      {subtitle && (
+        <div className="absolute top-6 left-6 sm:top-8 sm:left-8 lg:top-8 lg:left-12 z-20 pointer-events-auto">
+          <span className="font-mono text-xs sm:text-sm md:text-[15px] font-bold uppercase tracking-[0.22em] text-[#2547FF]">
+            {subtitle}
+          </span>
+        </div>
+      )}
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 w-full pt-8 sm:pt-0">
         {/* Realigned Balanced Catchphrase Header */}
         <div className="mx-auto mb-6 sm:mb-8 text-center max-w-3xl">
-          {subtitle && (
-            <p className="font-mono text-[11px] sm:text-xs font-semibold tracking-[0.2em] text-[#2547FF] uppercase mb-2 sm:mb-2.5">
-              {subtitle}
-            </p>
-          )}
           <h2
             id="team-heading"
-            className="font-display font-bold text-3xl sm:text-4xl md:text-[42px] lg:text-[44px] text-[#0A0A0A] tracking-[-0.025em] leading-[1.3] sm:leading-[1.35] text-balance mx-auto"
+            className="font-display font-semibold text-3xl sm:text-4xl md:text-[42px] lg:text-[44px] text-[#0A0A0A] tracking-[-0.015em] leading-[1.3] sm:leading-[1.35] text-balance mx-auto"
           >
             {catchphrase === "The minds building the future at PSG Tech E-Cell" ? (
               <>
@@ -527,14 +628,15 @@ export function TeamSection({
             </svg>
           </button>
 
-          {/* Draggable Track Container: Native mobile touch-pan-y, mouse grab on desktop */}
+          {/* Draggable Track Container: Mobile touch swipe & mouse grab on desktop */}
           <div
             ref={containerRef}
             onScroll={handleScroll}
             onMouseDown={handleMouseDown}
             onTouchStart={handleContainerTouchStart}
+            onTouchMove={handleContainerTouchMove}
             onTouchEnd={handleContainerTouchEnd}
-            className={`w-full overflow-x-auto overflow-y-hidden pt-7 pb-6 sm:py-5 select-none touch-pan-y flex items-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"
+            className={`w-full overflow-x-auto overflow-y-hidden pt-7 pb-6 sm:py-5 select-none touch-manipulation flex items-center scrollbar-none [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"
               }`}
           >
             <div className="flex shrink-0 items-center">

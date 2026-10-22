@@ -186,11 +186,11 @@ export const NavLink: React.FC<iNavLinkProps> = ({
                 staggerChildren: 0.075,
                 delayChildren: 0.25,
               }}
-              className="relative z-10 block text-[clamp(22px,4vw,30px)] font-normal text-black transition-colors duration-300 font-['Neuton',Georgia,serif] leading-[1.2] tracking-[0.01em]"
+              className="relative z-10 block text-[clamp(22px,4vw,30px)] font-semibold text-black transition-colors duration-300 font-display leading-[1.2] tracking-[0.01em]"
               style={{
-                fontFamily: '"Neuton", Georgia, serif',
+                fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif',
                 fontSize: 'clamp(22px, 4vw, 30px)',
-                fontWeight: 400,
+                fontWeight: 600,
                 lineHeight: 1.2,
                 letterSpacing: '0.01em',
               }}
@@ -272,14 +272,14 @@ export const CurvedNavbar: React.FC<
     >
       <div
         className="h-full pt-8 sm:pt-10 flex flex-col justify-between"
-        style={{ fontFamily: '"Neuton", Georgia, serif' }}
+        style={{ fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif' }}
       >
         <div className="flex flex-col text-5xl gap-2 mt-0 px-8 sm:px-12 md:px-20">
           <div
             className="text-black border-b border-black/20 uppercase text-xs sm:text-sm tracking-wider pb-1.5 mb-0.5"
             style={{
-              fontFamily: '"Neuton", Georgia, serif',
-              fontWeight: 400,
+              fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+              fontWeight: 600,
               letterSpacing: '0.08em',
             }}
           >
@@ -329,20 +329,32 @@ export const Header: React.FC<iHeaderProps> = ({
       <div className="relative">
         <div
           onClick={handleClick}
-          className="fixed -right-1 top-0 md:-right-1 m-5 z-50 w-12 h-12 rounded-none flex items-center justify-center cursor-pointer bg-white shadow-xs"
+          aria-label={isActive ? "Close menu" : "Open menu"}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleClick();
+            }
+          }}
+          className="fixed -right-1 top-0 md:-right-1 m-5 z-50 w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer bg-white/95 backdrop-blur-md border border-neutral-300/90 shadow-[0_4px_16px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.06)] hover:bg-white hover:border-neutral-400 hover:shadow-[0_6px_20px_rgba(0,0,0,0.14)] hover:scale-105 active:scale-95 transition-all duration-200"
         >
-          <div className="relative w-8 h-6 flex flex-col justify-between items-center pointer-events-none">
+          <div className="relative w-6 h-[18px] flex flex-col justify-between items-center pointer-events-none">
             <span
-              className={`block h-1 w-7 bg-black transition-transform duration-300 ${isActive ? "rotate-45 translate-y-2" : ""
-                }`}
+              className={`block h-[2.5px] w-6 bg-[#0B0B0F] rounded-full transition-transform duration-300 origin-center ${
+                isActive ? "rotate-45 translate-y-[7.75px]" : ""
+              }`}
             ></span>
             <span
-              className={`block h-1 w-7 bg-black transition-opacity duration-300 ${isActive ? "opacity-0" : ""
-                }`}
+              className={`block h-[2.5px] w-6 bg-[#0B0B0F] rounded-full transition-opacity duration-200 ${
+                isActive ? "opacity-0" : ""
+              }`}
             ></span>
             <span
-              className={`block h-1 w-7 bg-black transition-transform duration-300 ${isActive ? "-rotate-45 -translate-y-3" : ""
-                }`}
+              className={`block h-[2.5px] w-6 bg-[#0B0B0F] rounded-full transition-transform duration-300 origin-center ${
+                isActive ? "-rotate-45 -translate-y-[7.75px]" : ""
+              }`}
             ></span>
           </div>
         </div>

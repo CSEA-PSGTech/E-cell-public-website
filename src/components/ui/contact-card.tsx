@@ -53,7 +53,7 @@ export function ContactCard({
       {/* Left Info Pane (2 columns on large screens) */}
       <div className="flex flex-col justify-between p-4 sm:p-8 md:p-10 lg:col-span-2 min-w-0 w-full">
         <div className="relative h-full space-y-4 sm:space-y-5">
-          <h2 className="font-display font-bold text-2xl sm:text-4xl lg:text-[44px] text-[#0A0A0A] tracking-[-0.025em] leading-[1.15]">
+          <h2 className="font-display font-semibold text-2xl sm:text-4xl lg:text-[44px] text-[#0A0A0A] tracking-[-0.015em] leading-[1.15]">
             {title}
           </h2>
 

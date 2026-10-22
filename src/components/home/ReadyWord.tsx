@@ -123,7 +123,7 @@ const ReadyWord = forwardRef<ReadyWordRef, ReadyWordProps>(function ReadyWord(
     width: 0,
     height: 0,
     fontSize: 76,
-    fontFamily: '"Plus Jakarta Sans", sans-serif',
+    fontFamily: '"Playfair Display", Georgia, serif',
     fontWeight: 700,
     focusX: 0,
     focusY: 0,
@@ -139,7 +139,7 @@ const ReadyWord = forwardRef<ReadyWordRef, ReadyWordProps>(function ReadyWord(
     const rect = staticWordRef.current.getBoundingClientRect();
     const computed = window.getComputedStyle(staticWordRef.current);
     const fontSize = parseFloat(computed.fontSize) || 76;
-    const fontFamily = computed.fontFamily || '"Plus Jakarta Sans", sans-serif';
+    const fontFamily = computed.fontFamily || '"Playfair Display", Georgia, serif';
     const fontWeight = parseInt(computed.fontWeight, 10) || 700;
 
     // Character index of focusChar (default 'E')
@@ -367,7 +367,7 @@ const ReadyWord = forwardRef<ReadyWordRef, ReadyWordProps>(function ReadyWord(
           className="hero-ready-static select-text inline-block"
           style={{
             color: "#2547FF",
-            letterSpacing: "-0.035em",
+            letterSpacing: "-0.02em",
           }}
         >
           {word}

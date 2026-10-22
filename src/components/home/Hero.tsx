@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import GlyphPortal from "@/components/ui/glyph-portal";
 import Topography from "@/components/ui/Topography";
 import HeroBackground from "@/components/layout/HeroBackground";
-import HeroLine from "@/components/layout/HeroLine";
 import HeroTopographyBackground from "@/components/home/HeroTopographyBackground";
 import ReadyWord, { type ReadyWordRef } from "@/components/home/ReadyWord";
 import ClickSpark from "@/components/ui/ClickSpark";
@@ -30,14 +29,14 @@ export default function Hero({
 
   useEffect(() => {
     let active = true;
-    const fontSpec = `700 76px "Plus Jakarta Sans"`;
+    const fontSpec = `700 76px "Playfair Display"`;
     const timer = setTimeout(() => {
       if (active) setFontReady(true);
     }, 1200);
 
     if (typeof document !== "undefined" && document.fonts) {
       document.fonts
-        .load(fontSpec, "Build before you're READY")
+        .load(fontSpec, "Build before you’re READY")
         .then(() => {
           if (active) setFontReady(true);
         })
@@ -84,23 +83,22 @@ export default function Hero({
       className="relative w-full overflow-x-clip select-text bg-transparent scroll-mt-0"
       style={{
         containerType: "inline-size",
-        fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
       }}
     >
       {/* Anchor for direct smooth navigation to About Us blue portal stage */}
       <div
         id="about"
         className="absolute left-0 w-px h-px pointer-events-none opacity-0 select-none"
-        style={{ top: "calc(2.2 * 100svh * 0.88)" }}
+        style={{ top: "calc(2.55 * 100svh)" }}
         aria-hidden="true"
       />
-      {/* Hero Background: React Bits DotGrid + Flowing Vector Curve (To rollback anytime: swap with <HeroTopographyBackground />) */}
+      {/* Hero Background: React Bits DotGrid (To rollback anytime: swap with <HeroTopographyBackground />) */}
       <div
         aria-hidden="true"
         className="sticky top-0 h-[100svh] w-full pointer-events-none z-0 -mb-[100svh] overflow-hidden select-none"
       >
         <HeroBackground />
-        <HeroLine />
       </div>
 
       <style>{`
@@ -203,10 +201,11 @@ export default function Hero({
         }
 
         .hero-logo-text {
+          font-family: var(--font-display);
           font-size: 26px;
-          font-weight: 800;
+          font-weight: 700;
           line-height: 1.05;
-          letter-spacing: -0.035em;
+          letter-spacing: -0.01em;
           color: #000000;
         }
         @media (max-width: 767px) {
@@ -216,8 +215,9 @@ export default function Hero({
         }
 
         .hero-college-text {
+          font-family: var(--font-sans);
           font-size: 13px;
-          font-weight: 600;
+          font-weight: 400;
           line-height: 1.2;
           color: #1A1A1A;
           letter-spacing: 0.01em;
@@ -238,11 +238,11 @@ export default function Hero({
 
         .hero-headline-text {
           margin: 0 0 24px 0;
-          font-family: inherit;
+          font-family: var(--font-display);
           font-size: clamp(3rem, 7vw, 6.5rem);
-          font-weight: 500;
+          font-weight: 700;
           line-height: 0.95;
-          letter-spacing: -0.03em;
+          letter-spacing: -0.02em;
           color: #0B0B0F;
           text-wrap: balance;
         }
@@ -258,9 +258,9 @@ export default function Hero({
 
         .hero-supporting-text {
           margin: 0 0 32px 0;
-          font-family: inherit;
+          font-family: var(--font-sans);
           font-size: 16px;
-          font-weight: 600;
+          font-weight: 400;
           line-height: 1.625;
           color: rgba(11, 11, 15, 0.62);
           max-width: 52ch;
@@ -294,8 +294,9 @@ export default function Hero({
           border-radius: 9999px;
           background: #2547FF;
           color: #FFFFFF;
+          font-family: var(--font-sans);
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 600;
           line-height: 1;
           letter-spacing: -0.01em;
           box-shadow: 0 4px 14px rgba(37, 71, 255, 0.28);
@@ -342,6 +343,116 @@ export default function Hero({
           z-index: 20 !important;
           opacity: 1 !important;
           pointer-events: none !important;
+        }
+
+        /* When blue portal is active, match body & main background so white never peeks through under any circumstance */
+        body[data-portal-blue="true"] {
+          background-color: #0B1E8A !important;
+        }
+        body[data-portal-blue="true"] main {
+          background-color: #0B1E8A !important;
+          transition: background-color 0.15s ease;
+        }
+
+        /* Mobile View: Continuous dvh scaling for ~80% coverage on any device dimension */
+        @media (max-width: 767px) {
+          /* 1. Track true dynamic viewport height on mobile as browser toolbars collapse */
+          [data-slipstream-hero] [data-gp-pin] {
+            height: 100dvh !important;
+            min-height: 100dvh !important;
+            overflow: visible !important;
+          }
+
+          /* 2. Overbleed blue portal background so it extends 160px past the bottom */
+          [data-slipstream-hero] [data-gp-field] {
+            bottom: -160px !important;
+            height: calc(100% + 160px) !important;
+          }
+
+          [data-slipstream-hero] [data-gp-default-field] {
+            bottom: -160px !important;
+            min-height: calc(100% + 160px) !important;
+          }
+
+          /* 3. Top-aligned with safe clearance below the fixed hamburger menu */
+          [data-slipstream-hero] [data-gp-content] {
+            height: 100dvh !important;
+            min-height: 100dvh !important;
+            padding-top: max(clamp(5.5rem, 11.5dvh, 6.5rem), calc(72px + env(safe-area-inset-top, 0px))) !important;
+            padding-bottom: clamp(1.5rem, 3.5dvh, 2.25rem) !important;
+            padding-left: clamp(1.25rem, 5vw, 2rem) !important;
+            padding-right: clamp(1.25rem, 5vw, 2rem) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            justify-content: flex-start !important;
+            overflow-y: auto !important;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .hero-copy-wrapper {
+            height: auto !important;
+            min-height: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            gap: clamp(1rem, 2.4dvh, 1.85rem) !important;
+            transform: translateY(var(--hero-exit-y, 0px)) !important;
+          }
+        }
+
+        /* Tablet View (768px - 1023px): Top-anchored 70-80% Screen Coverage Stacked Bento Cards */
+        @media (min-width: 768px) and (max-width: 1023px) {
+          [data-slipstream-hero] [data-gp-content] {
+            padding-top: max(clamp(5.2rem, 11dvh, 6.8rem), 90px) !important;
+            padding-left: clamp(1.75rem, 5vw, 3.5rem) !important;
+            padding-right: clamp(1.75rem, 5vw, 3.5rem) !important;
+            padding-bottom: clamp(2rem, 4dvh, 3rem) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+          }
+
+          .hero-copy-wrapper {
+            width: 100% !important;
+            max-width: clamp(680px, 86vw, 820px) !important;
+            gap: clamp(1.25rem, 2.2dvh, 1.75rem) !important;
+            margin: 0 auto !important;
+          }
+
+          .hero-pillars-grid {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: clamp(12px, 1.8dvh, 16px) !important;
+            border-top: none !important;
+            padding-top: 0 !important;
+            width: 100% !important;
+          }
+
+          .hero-col-1, .hero-col-2, .hero-col-3 {
+            width: 100% !important;
+            padding: 0 !important;
+            border-right: none !important;
+          }
+
+          .hero-bento-card {
+            border-radius: 20px !important;
+            padding: clamp(18px, 2.2dvh, 24px) clamp(20px, 3.2vw, 28px) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.16) !important;
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+          }
+
+          [data-slipstream-hero][data-pillars-ready="true"] .hero-bento-card:active {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(0.99);
+          }
         }
 
         [data-slipstream-hero][data-pillars-ready="true"] [data-gp-content]{
@@ -609,7 +720,7 @@ export default function Hero({
         interactive={false}
         scrollLength={scrollLength}
         fontWeight={800}
-        fontFamily='"Plus Jakarta Sans", -apple-system, sans-serif'
+        fontFamily='"Playfair Display", Georgia, "Times New Roman", serif'
         enterLabel=""
         onProgress={(p) => {
           const hero = heroContainerRef.current;
@@ -727,7 +838,7 @@ export default function Hero({
           "--gp-ink": "#0A0A0A",
           "--gp-field": "#2547FF",
           "--gp-foreground": "#FFFFFF",
-          fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
+          fontFamily: '"Playfair Display", Georgia, "Times New Roman", serif',
         }}
         background={
           <div
@@ -844,7 +955,7 @@ export default function Hero({
                 <h1 className="hero-headline-text">
                   <span className="block">Build before</span>
                   <span className="block">
-                    you&apos;re{" "}
+                    you’re{" "}
                     <ReadyWord ref={readyWordRef} word={word} focusChar={focusChar} />
                   </span>
                 </h1>
@@ -914,47 +1025,52 @@ export default function Hero({
             sparkRadius={15}
             sparkCount={8}
             duration={400}
-            className="flex flex-col items-start justify-between w-full h-full gap-6 lg:gap-8"
+            className="flex flex-col items-start justify-start lg:justify-between w-full h-auto lg:h-full gap-[clamp(0.75rem,1.8dvh,1.5rem)] lg:gap-8"
           >
             {/* Top Tier: Dramatic Headline + Desktop Sub-lead */}
-            <div className="flex flex-col items-start gap-4 sm:gap-5 w-full">
+            <div className="flex flex-col items-start gap-[clamp(6px,1.2dvh,12px)] lg:gap-5 w-full">
               {/* Bold 2-Line Headline - Rises from Bottom */}
               <div className="hero-headline-flow">
-                <h2 className="text-white font-display font-normal text-[36px] sm:text-[48px] md:text-[60px] lg:text-[72px] leading-[1.08] tracking-[-0.03em] text-balance">
+                <h2 className="text-white font-display font-semibold text-[clamp(28px,4.2dvh,42px)] md:text-[60px] lg:text-[72px] leading-[1.12] md:leading-[1.08] tracking-[-0.02em] text-balance">
                   Where student ideas
                   <br />
                   become real ventures.
                 </h2>
               </div>
 
-              {/* Desktop Sub-lead: Gives context and fills the top tier with purpose (Desktop Only) */}
-              <p className="hero-sublead-flow hidden lg:block text-white/85 font-sans text-base lg:text-lg max-w-3xl font-normal leading-relaxed">
+              {/* Sub-lead: Gives context and fills the top tier with purpose (Tablet & Desktop) */}
+              <p className="hero-sublead-flow hidden md:block text-white/85 font-sans text-sm md:text-base lg:text-lg max-w-2xl lg:max-w-3xl font-normal leading-relaxed">
                 The flagship innovation launchpad empowering student founders at PSG College of Technology from initial concept to scalable venture.
               </p>
             </div>
 
-            {/* Middle Tier: 3 Full-Height Bento Cards (Desktop) / Clean Sequential List (Mobile) */}
-            <div className="hero-pillars-grid grid grid-cols-1 md:grid-cols-3 w-full border-t pt-7 sm:pt-9 gap-8 md:gap-0 lg:gap-6 lg:border-t-0 lg:pt-0 transition-colors">
+            {/* Middle Tier: 3 Full-Height Bento Cards (Desktop) / Clean Sequential List (Mobile) / Stacked Bento Cards (Tablet) */}
+            <div className="hero-pillars-grid grid grid-cols-1 lg:grid-cols-3 w-full border-t pt-[clamp(10px,1.6dvh,18px)] md:pt-0 gap-[clamp(10px,1.8dvh,18px)] md:gap-3.5 lg:gap-6 lg:border-t-0 lg:pt-0 transition-colors">
               {/* 01 — Our Vision */}
-              <div className="hero-col-1 md:pr-10 md:border-r lg:pr-0 lg:border-r-0 transition-colors">
-                <div className="hero-pillar-item hero-bento-card relative p-3.5 sm:p-4 -m-3.5 sm:-m-4 lg:m-0 rounded-2xl">
+              <div className="hero-col-1 lg:pr-0 lg:border-r-0 transition-colors">
+                <div className="hero-pillar-item hero-bento-card relative p-0 sm:p-2 md:p-3.5 lg:p-0 rounded-2xl">
                   {/* Architectural Spotlight & Hairline Beam (Desktop Hover Only) */}
                   <div className="hero-spotlight-layer" aria-hidden="true" />
                   <div className="hero-spotlight-beam" aria-hidden="true" />
 
                   <div className="relative z-10 flex flex-col justify-between h-full">
                     <div>
-                      <div className="hero-c1-head flex items-center justify-between mb-4">
-                        <div className="hero-badge w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0 shadow-[0_0_16px_rgba(255,255,255,0.12)] transition-all duration-300">
-                          <Eye className="w-5 h-5 text-white" />
+                      {/* Integrated Header: Inline Icon + Title on Tablet, Stacked on Desktop */}
+                      <div className="hero-c1-head flex items-center justify-between mb-2.5 lg:mb-3 w-full">
+                        <div className="flex items-center gap-3 lg:gap-0 lg:flex-col lg:items-start">
+                          <div className="hero-badge w-[clamp(34px,4.5dvh,44px)] h-[clamp(34px,4.5dvh,44px)] rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0 shadow-[0_0_16px_rgba(255,255,255,0.12)] transition-all duration-300 lg:mb-3">
+                            <Eye className="w-[clamp(16px,2.2dvh,20px)] h-[clamp(16px,2.2dvh,20px)] text-white" />
+                          </div>
+                          <h3 className="text-white font-display font-semibold text-[clamp(18px,2.4dvh,22px)] tracking-tight">
+                            Our Vision
+                          </h3>
                         </div>
-                        <span className="hidden lg:inline-flex items-center text-[10px] font-mono font-semibold tracking-[0.2em] text-white/75 bg-white/10 border border-white/15 px-3 py-1 rounded-full uppercase">
+                        <span className="hidden md:inline-flex items-center text-[10px] font-mono font-semibold tracking-[0.2em] text-white/75 bg-white/10 border border-white/15 px-3 py-1 rounded-full uppercase lg:self-start">
                           01 / INVENT
                         </span>
                       </div>
-                      <h3 className="text-white font-sans font-medium text-xl lg:text-2xl tracking-tight mb-2.5">Our Vision</h3>
-                      <div className="hero-c1-body">
-                        <p className="hero-pillar-body-text text-white/80 font-sans font-normal text-sm sm:text-base leading-[1.65]">
+                      <div className="hero-c1-body w-full">
+                        <p className="hero-pillar-body-text text-white/85 font-sans font-normal text-[clamp(13.5px,1.75dvh,15px)] leading-[1.6]">
                           To inspire students to think boldly, build fearlessly, and shape the future through technology and venture creation.
                         </p>
                       </div>
@@ -964,25 +1080,30 @@ export default function Hero({
               </div>
 
               {/* 02 — Our Mission */}
-              <div className="hero-col-2 md:px-10 md:border-r lg:px-0 lg:border-r-0 transition-colors">
-                <div className="hero-pillar-item hero-bento-card relative p-3.5 sm:p-4 -m-3.5 sm:-m-4 lg:m-0 rounded-2xl">
+              <div className="hero-col-2 lg:px-0 lg:border-r-0 transition-colors">
+                <div className="hero-pillar-item hero-bento-card relative p-0 sm:p-2 md:p-3.5 lg:p-0 rounded-2xl">
                   {/* Architectural Spotlight & Hairline Beam (Desktop Hover Only) */}
                   <div className="hero-spotlight-layer" aria-hidden="true" />
                   <div className="hero-spotlight-beam" aria-hidden="true" />
 
                   <div className="relative z-10 flex flex-col justify-between h-full">
                     <div>
-                      <div className="hero-c2-head flex items-center justify-between mb-4">
-                        <div className="hero-badge w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0 shadow-[0_0_16px_rgba(255,255,255,0.12)] transition-all duration-300">
-                          <Target className="w-5 h-5 text-white" />
+                      {/* Integrated Header: Inline Icon + Title on Tablet, Stacked on Desktop */}
+                      <div className="hero-c2-head flex items-center justify-between mb-2.5 lg:mb-3 w-full">
+                        <div className="flex items-center gap-3 lg:gap-0 lg:flex-col lg:items-start">
+                          <div className="hero-badge w-[clamp(34px,4.5dvh,44px)] h-[clamp(34px,4.5dvh,44px)] rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0 shadow-[0_0_16px_rgba(255,255,255,0.12)] transition-all duration-300 lg:mb-3">
+                            <Target className="w-[clamp(16px,2.2dvh,20px)] h-[clamp(16px,2.2dvh,20px)] text-white" />
+                          </div>
+                          <h3 className="text-white font-display font-semibold text-[clamp(18px,2.4dvh,22px)] tracking-tight">
+                            Our Mission
+                          </h3>
                         </div>
-                        <span className="hidden lg:inline-flex items-center text-[10px] font-mono font-semibold tracking-[0.2em] text-white/75 bg-white/10 border border-white/15 px-3 py-1 rounded-full uppercase">
+                        <span className="hidden md:inline-flex items-center text-[10px] font-mono font-semibold tracking-[0.2em] text-white/75 bg-white/10 border border-white/15 px-3 py-1 rounded-full uppercase lg:self-start">
                           02 / INCUBATE
                         </span>
                       </div>
-                      <h3 className="text-white font-sans font-medium text-xl lg:text-2xl tracking-tight mb-2.5">Our Mission</h3>
-                      <div className="hero-c2-body">
-                        <p className="hero-pillar-body-text text-white/80 font-sans font-normal text-sm sm:text-base leading-[1.65]">
+                      <div className="hero-c2-body w-full">
+                        <p className="hero-pillar-body-text text-white/85 font-sans font-normal text-[clamp(13.5px,1.75dvh,15px)] leading-[1.6]">
                           To turn ideas into action through hands-on prototype incubation, structured mentorship, and seed grants.
                         </p>
                       </div>
@@ -992,25 +1113,30 @@ export default function Hero({
               </div>
 
               {/* 03 — About Us */}
-              <div className="hero-col-3 md:pl-10 lg:pl-0 transition-colors">
-                <div className="hero-pillar-item hero-bento-card relative p-3.5 sm:p-4 -m-3.5 sm:-m-4 lg:m-0 rounded-2xl">
+              <div className="hero-col-3 lg:pl-0 transition-colors">
+                <div className="hero-pillar-item hero-bento-card relative p-0 sm:p-2 md:p-3.5 lg:p-0 rounded-2xl">
                   {/* Architectural Spotlight & Hairline Beam (Desktop Hover Only) */}
                   <div className="hero-spotlight-layer" aria-hidden="true" />
                   <div className="hero-spotlight-beam" aria-hidden="true" />
 
                   <div className="relative z-10 flex flex-col justify-between h-full">
                     <div>
-                      <div className="hero-c3-head flex items-center justify-between mb-4">
-                        <div className="hero-badge w-11 h-11 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0 shadow-[0_0_16px_rgba(255,255,255,0.12)] transition-all duration-300">
-                          <Users className="w-5 h-5 text-white" />
+                      {/* Integrated Header: Inline Icon + Title on Tablet, Stacked on Desktop */}
+                      <div className="hero-c3-head flex items-center justify-between mb-2.5 lg:mb-3 w-full">
+                        <div className="flex items-center gap-3 lg:gap-0 lg:flex-col lg:items-start">
+                          <div className="hero-badge w-[clamp(34px,4.5dvh,44px)] h-[clamp(34px,4.5dvh,44px)] rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0 shadow-[0_0_16px_rgba(255,255,255,0.12)] transition-all duration-300 lg:mb-3">
+                            <Users className="w-[clamp(16px,2.2dvh,20px)] h-[clamp(16px,2.2dvh,20px)] text-white" />
+                          </div>
+                          <h3 className="text-white font-display font-semibold text-[clamp(18px,2.4dvh,22px)] tracking-tight">
+                            About Us
+                          </h3>
                         </div>
-                        <span className="hidden lg:inline-flex items-center text-[10px] font-mono font-semibold tracking-[0.2em] text-white/75 bg-white/10 border border-white/15 px-3 py-1 rounded-full uppercase">
+                        <span className="hidden md:inline-flex items-center text-[10px] font-mono font-semibold tracking-[0.2em] text-white/75 bg-white/10 border border-white/15 px-3 py-1 rounded-full uppercase lg:self-start">
                           03 / SCALE
                         </span>
                       </div>
-                      <h3 className="text-white font-sans font-medium text-xl lg:text-2xl tracking-tight mb-2.5">About Us</h3>
-                      <div className="hero-c3-body">
-                        <p className="hero-pillar-body-text text-white/80 font-sans font-normal text-sm sm:text-base leading-[1.65]">
+                      <div className="hero-c3-body w-full">
+                        <p className="hero-pillar-body-text text-white/85 font-sans font-normal text-[clamp(13.5px,1.75dvh,15px)] leading-[1.6]">
                           A student-driven community at PSG Tech connecting aspiring innovators with industry leaders and venture networks.
                         </p>
                       </div>
@@ -1021,17 +1147,17 @@ export default function Hero({
             </div>
 
             {/* Bottom Tier: Left-aligned "Explore our projects" Pill Button */}
-            <div className="hero-cta-flow w-full flex items-center justify-start pt-1">
+            <div className="hero-cta-flow w-full flex items-center justify-start pt-[clamp(6px,1dvh,14px)]">
               <a
                 href="#projects"
                 onClick={(e) => {
                   e.preventDefault();
                   document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="group inline-flex items-center gap-3 bg-white text-[#1B3AE5] hover:bg-[#F2F4FF] hover:text-[#122CB0] px-7 py-3.5 rounded-full font-sans font-medium text-sm tracking-tight shadow-xl shadow-black/15 hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 cursor-pointer"
+                className="group inline-flex items-center gap-[clamp(8px,1.2dvh,12px)] bg-white text-[#1B3AE5] hover:bg-[#F2F4FF] hover:text-[#122CB0] px-[clamp(20px,2.8dvh,28px)] py-[clamp(11px,1.5dvh,15px)] rounded-full font-sans font-semibold text-[clamp(13.5px,1.75dvh,15px)] tracking-tight shadow-xl shadow-black/15 hover:shadow-2xl hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 cursor-pointer"
               >
                 <span>Explore our projects</span>
-                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                <ArrowRight className="w-[clamp(14px,1.8dvh,18px)] h-[clamp(14px,1.8dvh,18px)] transition-transform duration-200 group-hover:translate-x-1" />
               </a>
             </div>
           </ClickSpark>
