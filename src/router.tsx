@@ -41,4 +41,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+], {
+  // Matches vite `base` (e.g. /ecell/ -> /ecell); '/' in local dev.
+  basename: import.meta.env.BASE_URL.replace(/\/+$/, '') || '/',
+});

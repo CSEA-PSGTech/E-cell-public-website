@@ -159,7 +159,7 @@ export function getWorksWheelItems(limit: number = 6): WorksWheelItem[] {
   return selected.map((project) => ({
     title: project.title,
     image: project.coverImage,
-    href: `/projects/${project.slug}`,
+    href: `${import.meta.env.BASE_URL}projects/${project.slug}`,
     description: project.description,
     domain: project.domain,
     slug: project.slug,

@@ -58,7 +58,7 @@ export default function Footer() {
               aria-label="PSG Tech E-Cell Home"
             >
               <img
-                src="/images/ecell-logo.png"
+                src={`${import.meta.env.BASE_URL}images/ecell-logo.png`}
                 alt="PSG Tech E-Cell Logo"
                 className="h-11 sm:h-12 w-auto object-contain rounded-xl border border-black/[0.08] bg-white p-1 shadow-2xs"
               />
@@ -224,7 +224,7 @@ export default function Footer() {
                   href="mailto:ecell@psgtech.ac.in"
                   className="hover:text-[#2547FF] transition-colors block break-words"
                 >
-                  ecell@psgtech.ac.in
+                  csea.psgtech.ac.in/ecell
                 </a>
                 <a
                   href="tel:+919842294606"
@@ -279,6 +279,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-
-

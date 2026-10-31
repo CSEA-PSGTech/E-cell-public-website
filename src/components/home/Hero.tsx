@@ -878,7 +878,7 @@ export default function Hero({
                 >
                   <div className="hero-logo-box">
                     <img
-                      src="/images/ecell-logo.png"
+                      src={`${import.meta.env.BASE_URL}images/ecell-logo.png`}
                       alt="PSG Tech E-Cell Logo"
                       className="hero-logo-img"
                     />
@@ -901,7 +901,7 @@ export default function Hero({
                   title="PSG Centenary (1926 - 2026)"
                 >
                   <img
-                    src="/images/psg-centenary.png"
+                    src={`${import.meta.env.BASE_URL}images/psg-centenary.png`}
                     alt="PSG Centenary Logo"
                     className="w-full h-full object-contain"
                   />
@@ -912,7 +912,7 @@ export default function Hero({
                   title="PSG - In Nation Building since 1926"
                 >
                   <img
-                    src="/images/psg-diamond.png"
+                    src={`${import.meta.env.BASE_URL}images/psg-diamond.png`}
                     alt="PSG Logo"
                     className="w-full h-full object-contain"
                   />
@@ -923,7 +923,7 @@ export default function Hero({
                   title="CSEA - Computer Science & Engineering Association"
                 >
                   <img
-                    src="/images/csea-logo.png"
+                    src={`${import.meta.env.BASE_URL}images/csea-logo.png`}
                     alt="CSEA Logo"
                     className="w-full h-full object-contain"
                   />
@@ -934,7 +934,7 @@ export default function Hero({
                   title="PSG College of Technology Crest (Est. 1951)"
                 >
                   <img
-                    src="/images/psg-tech-crest.png"
+                    src={`${import.meta.env.BASE_URL}images/psg-tech-crest.png`}
                     alt="PSG Tech Crest Logo"
                     className="w-full h-full object-contain"
                   />

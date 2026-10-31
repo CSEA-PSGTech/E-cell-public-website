@@ -6,6 +6,8 @@ import autoprefixer from 'autoprefixer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Public path the site is served under (e.g. /ecell/ behind csea.psgtech.ac.in). Defaults to / for local dev.
+  base: process.env.VITE_BASE_PATH || '/',
   plugins: [react()],
   resolve: {
     alias: {

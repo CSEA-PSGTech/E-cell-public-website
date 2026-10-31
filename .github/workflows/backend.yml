@@ -1,0 +1,45 @@
+name: Backend Docker
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend.yml"
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ghcr.io/csea-psgtech/ecell-backend:latest
+            ghcr.io/csea-psgtech/ecell-backend:${{ github.sha }}
+
+      - name: Trigger Jenkins deployment
+        run: |
+          curl -fsS -k -X POST \
+            "https://jendc.psgtech.ac.in/generic-webhook-trigger/invoke?token=${{ secrets.JENKINS_WEBHOOK_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"service":"backend","image_tag":"${{ github.sha }}","git_sha":"${{ github.sha }}"}'
