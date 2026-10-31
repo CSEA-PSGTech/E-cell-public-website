@@ -168,14 +168,19 @@ export default function Projects() {
 
       {/* Hero Header Section - Refined, clean spacing with safe clearance on mobile */}
       <section className="relative z-20 text-center max-w-4xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 lg:pt-20 pb-6 sm:pb-8">
-        <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#2547FF] mb-2 block">
-          INNOVATION CATALOG
-        </span>
+        <div className="flex flex-col items-center gap-2 mb-3">
+          <span className="text-[10px] sm:text-xs font-mono font-medium tracking-[0.14em] text-[#0A0A0A]/60 bg-black/[0.04] border border-black/10 px-3 py-1 rounded-full uppercase">
+            [ STATUS: IN DEVELOPMENT & INCUBATION · COHORT 2026 ]
+          </span>
+          <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-[0.2em] sm:tracking-[0.24em] text-[#2547FF]">
+            INNOVATION CATALOG
+          </span>
+        </div>
         <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-semibold tracking-[-0.015em] text-[#0A0A0A] mb-3 sm:mb-4">
           Our <span className="text-[#2547FF]">Projects</span>
         </h1>
         <p className="text-sm lg:text-base text-[#0A0A0A]/65 max-w-xl mx-auto leading-relaxed font-sans px-2">
-          The complete portfolio of student-led ventures, breakthrough prototypes, and engineering solutions built at PSG College of Technology.
+          Student founders at PSG College of Technology are actively building and prototyping ventures across CleanTech, DeepTech, AI, and Robotics. Flagship projects will be unveiled shortly.
         </p>
 
         {/* Laptop View Scroll Indicator */}
@@ -232,7 +237,7 @@ export default function Projects() {
               {allProjects.map((project, index) => (
                 <ScrollStackItem
                   key={project.slug}
-                  itemClassName="!bg-white !rounded-[24px] border border-black/[0.08] !h-[390px] !p-8 shadow-[0_24px_50px_-20px_rgba(37,71,255,0.18)] hover:shadow-[0_28px_60px_-18px_rgba(37,71,255,0.24)] transition-shadow"
+                  itemClassName="!bg-white !rounded-[24px] border border-black/[0.08] !h-[390px] !p-8 shadow-[0_16px_36px_-16px_rgba(0,0,0,0.08)] filter grayscale contrast-[0.95] opacity-80"
                 >
                   <div className="flex flex-row items-stretch justify-between h-full w-full gap-8">
                     {/* Left details */}
@@ -240,31 +245,27 @@ export default function Projects() {
                       <div>
                         {/* Header metadata row */}
                         <div className="flex items-center gap-3">
-                          <span className="font-mono text-sm font-bold text-[#2547FF] tracking-wider">
+                          <span className="font-mono text-sm font-bold text-[#0A0A0A]/45 tracking-wider">
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           {project.domain && (
-                            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium tracking-wide bg-[#2547FF]/10 text-[#2547FF] border border-[#2547FF]/20">
+                            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium tracking-wide bg-black/[0.04] text-[#0A0A0A]/60 border border-black/10">
                               {project.domain}
                             </span>
                           )}
-                          {project.featured && (
-                            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-amber-500/10 text-amber-600 border border-amber-500/20">
-                              Featured
-                            </span>
-                          )}
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-black/[0.04] text-[#0A0A0A]/50 border border-black/10">
+                            Stealth Mode
+                          </span>
                         </div>
 
                         {/* Title */}
-                        <h2 className="mt-3 text-3xl font-bold text-[#0A0A0A] tracking-tight hover:text-[#2547FF] transition-colors">
-                          <Link to={`/projects/${project.slug}`}>
-                            {project.title}
-                          </Link>
+                        <h2 className="mt-3 text-3xl font-bold text-[#0A0A0A]/85 tracking-tight">
+                          {project.title}
                         </h2>
 
                         {/* Tagline */}
                         {project.tagline && (
-                          <p className="mt-1 text-sm font-medium text-[#2547FF]/85 tracking-tight font-sans">
+                          <p className="mt-1 text-sm font-medium text-[#0A0A0A]/60 tracking-tight font-sans">
                             {project.tagline}
                           </p>
                         )}
@@ -280,7 +281,7 @@ export default function Projects() {
                             {project.technologies.slice(0, 4).map((tech) => (
                               <span
                                 key={tech}
-                                className="px-2 py-0.5 rounded-md text-[11px] font-mono text-[#0A0A0A]/60 bg-black/[0.04] border border-black/[0.04]"
+                                className="px-2 py-0.5 rounded-md text-[11px] font-mono text-[#0A0A0A]/55 bg-black/[0.03] border border-black/[0.04]"
                               >
                                 {tech}
                               </span>
@@ -296,36 +297,24 @@ export default function Projects() {
 
                       {/* Footer Actions */}
                       <div className="pt-4 border-t border-black/[0.06] flex items-center justify-between">
-                        <Link
-                          to={`/projects/${project.slug}`}
-                          className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2547FF] group/link hover:underline"
-                        >
-                          <span>Explore Project</span>
-                          <span className="transition-transform group-hover/link:translate-x-1">
-                            &rarr;
-                          </span>
-                        </Link>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-mono font-medium uppercase tracking-wider text-[#0A0A0A]/40 bg-black/[0.04] px-3 py-1.5 rounded-full border border-black/10 cursor-not-allowed select-none">
+                          Coming Soon
+                        </span>
                         <span className="text-xs font-mono text-[#0A0A0A]/40">
-                          Lead: {project.teamLead}
+                          Cohort 2026 · In Incubation
                         </span>
                       </div>
                     </div>
 
                     {/* Right image preview */}
                     {project.coverImage && (
-                      <div className="shrink-0 w-[240px] h-full rounded-2xl overflow-hidden border border-black/[0.08] bg-slate-100 shadow-xs relative group/img">
+                      <div className="shrink-0 w-[240px] h-full rounded-2xl overflow-hidden border border-black/[0.08] bg-slate-100 shadow-xs relative">
                         <img
                           src={project.coverImage}
                           alt={project.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                          className="w-full h-full object-cover filter grayscale contrast-[0.95] opacity-65"
                           loading="lazy"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity flex items-end p-3">
-                          <span className="text-[11px] font-mono text-white flex items-center gap-1">
-                            <span>Open Details</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </span>
-                        </div>
                       </div>
                     )}
                   </div>

@@ -1,6 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/types/project";
 
 export interface MobileProjectsGalleryProps {
@@ -10,35 +8,39 @@ export interface MobileProjectsGalleryProps {
 export default function MobileProjectsGallery({ projects }: MobileProjectsGalleryProps) {
   return (
     <section className="w-full">
-      {/* Gallery Header (from Gallery02) */}
+      {/* Gallery Header */}
       <div className="mb-8 sm:mb-12 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between border-b border-black/[0.06] pb-6">
         <div className="max-w-lg">
-          <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#2547FF] font-semibold block mb-2">
-            Showcase ({String(projects.length).padStart(2, "0")})
-          </span>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-[#2547FF] font-semibold">
+              Showcase ({String(projects.length).padStart(2, "0")})
+            </span>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-black/[0.04] text-[#0A0A0A]/50 border border-black/10">
+              In Incubation
+            </span>
+          </div>
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#0A0A0A]">
             Every venture, considered.
           </h2>
         </div>
         <p className="text-xs sm:text-sm text-[#0A0A0A]/60 sm:text-right font-sans">
-          Select any venture to explore specs & architecture.
+          Student ventures currently in incubation. Full details coming soon.
         </p>
       </div>
 
       {/* Responsive Gallery Grid: 1 col on mobile, 2 cols on tablet */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-6">
         {projects.map((project, index) => (
-          <Link
+          <div
             key={project.slug}
-            to={`/projects/${project.slug}`}
-            className="group flex flex-col gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-white/70 backdrop-blur-xs border border-black/[0.08] hover:border-[#2547FF]/35 transition-all shadow-xs hover:shadow-lg hover:shadow-[#2547FF]/10 active:scale-[0.99] cursor-pointer"
+            className="flex flex-col gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-white/70 backdrop-blur-xs border border-black/[0.08] shadow-xs filter grayscale contrast-[0.95] opacity-80"
           >
             {/* Cinematic 16:9 Image Container */}
             <div className="aspect-video w-full overflow-hidden rounded-xl border border-black/[0.06] bg-slate-100 relative [isolation:isolate]">
               <img
                 src={project.coverImage}
                 alt={project.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] rounded-[inherit]"
+                className="w-full h-full object-cover rounded-[inherit] filter grayscale contrast-[0.95] opacity-65"
                 loading="lazy"
               />
 
@@ -53,29 +55,22 @@ export default function MobileProjectsGallery({ projects }: MobileProjectsGaller
                   </span>
                 )}
               </div>
-
-              {/* Subtle hover icon button */}
-              <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white/90 text-[#2547FF] backdrop-blur-xs flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                <ArrowUpRight className="w-4 h-4" />
-              </div>
             </div>
 
             {/* Captions & Metadata */}
             <figcaption className="px-1 flex flex-col flex-1 justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-base sm:text-lg font-bold text-[#0A0A0A] tracking-tight group-hover:text-[#2547FF] transition-colors">
+                  <h3 className="text-base sm:text-lg font-bold text-[#0A0A0A]/85 tracking-tight">
                     {project.title}
                   </h3>
-                  {project.featured && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-amber-500/10 text-amber-600 border border-amber-500/20 shrink-0">
-                      Featured
-                    </span>
-                  )}
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider bg-black/[0.04] text-[#0A0A0A]/50 border border-black/10 shrink-0">
+                    Stealth Mode
+                  </span>
                 </div>
 
                 {project.tagline && (
-                  <p className="mt-1 text-xs sm:text-sm font-medium text-[#2547FF]/85 font-sans">
+                  <p className="mt-1 text-xs sm:text-sm font-medium text-[#0A0A0A]/60 font-sans">
                     {project.tagline}
                   </p>
                 )}
@@ -85,13 +80,13 @@ export default function MobileProjectsGallery({ projects }: MobileProjectsGaller
                 </p>
               </div>
 
-              {/* Technologies row & Explore button */}
+              {/* Technologies row & Status pill */}
               <div className="mt-4 pt-3 border-t border-black/[0.05] flex items-center justify-between">
                 <div className="flex flex-wrap gap-1">
                   {project.technologies.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-mono text-[#0A0A0A]/60 bg-black/[0.04]"
+                      className="px-2 py-0.5 rounded-md text-[10px] font-mono text-[#0A0A0A]/50 bg-black/[0.04]"
                     >
                       {tech}
                     </span>
@@ -103,13 +98,12 @@ export default function MobileProjectsGallery({ projects }: MobileProjectsGaller
                   )}
                 </div>
 
-                <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#2547FF] shrink-0 group-hover:underline">
-                  <span>Explore</span>
-                  <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                <span className="inline-flex items-center gap-1 text-[11px] font-mono font-medium uppercase tracking-wider text-[#0A0A0A]/40 bg-black/[0.04] px-2.5 py-0.5 rounded-full border border-black/10 shrink-0 select-none">
+                  Coming Soon
                 </span>
               </div>
             </figcaption>
-          </Link>
+          </div>
         ))}
       </div>
     </section>

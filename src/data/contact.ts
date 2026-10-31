@@ -17,7 +17,7 @@ export const contactSectionConfig: ContactSectionConfig = {
     {
       id: "phone",
       label: "Phone",
-      value: "+91 422 257 2177",
+      value: "+91 98422 94606",
       icon: "phone",
     },
     {
@@ -28,7 +28,7 @@ export const contactSectionConfig: ContactSectionConfig = {
     },
   ],
   form: {
-    action: "/api/contact",
+    action: "/api/enquiries",
     method: "POST",
     submitButtonText: "Submit Message",
     fields: [

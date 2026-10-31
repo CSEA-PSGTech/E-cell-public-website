@@ -19,6 +19,18 @@ export default defineConfig({
     cors: true,
     allowedHosts: true,
     proxy: {
+      // 1. Google Sheets data (Members & Projects) -> Node.js Express backend (Port 4000)
+      '/api/members': {
+        target: 'http://127.0.0.1:4000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/projects': {
+        target: 'http://127.0.0.1:4000',
+        changeOrigin: true,
+        secure: false,
+      },
+      // 2. Private Portal API (Enquiries, Collaboration, Auth) -> Python Flask backend (Port 5000)
       '/api': {
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,

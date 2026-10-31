@@ -8,9 +8,13 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 let cachedClient = null;
 
-// In-memory cache for sheet values to reduce rate limits and improve response latency
+// In-memory cache for sheet values to reduce rate limits and improve response latency.
+// In development, default to 0s TTL so changes in Google Sheets appear instantly on refresh.
 const cache = new Map();
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes cache
+const isDev = process.env.NODE_ENV !== "production";
+const envTtl = process.env.CACHE_TTL_SECONDS !== undefined ? parseInt(process.env.CACHE_TTL_SECONDS, 10) : NaN;
+const CACHE_TTL_SECONDS = !isNaN(envTtl) ? envTtl : (isDev ? 0 : 300);
+const CACHE_TTL_MS = Math.max(0, CACHE_TTL_SECONDS * 1000);
 
 function getAuthClient() {
   if (cachedClient) return cachedClient;
@@ -71,17 +75,21 @@ function parseCsv(text) {
  * 2. Public Google Sheet export fallback if Service Account credentials are not set in .env.
  */
 export async function fetchSheetValues(range = "A1:Z500") {
-  const sheetId = process.env.GSHEET_ID;
+  const rawSheetId = process.env.GSHEET_ID;
+  const urlMatch = rawSheetId ? rawSheetId.match(/\/d\/([a-zA-Z0-9-_]+)/) : null;
+  const sheetId = urlMatch ? urlMatch[1] : (rawSheetId || "").trim();
 
   if (!sheetId) {
     throw new Error("Missing GSHEET_ID in backend .env");
   }
 
-  // Check in-memory cache
+  // Check in-memory cache if caching is active
   const cacheKey = `${sheetId}:${range}`;
-  const cached = cache.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-    return cached.data;
+  if (CACHE_TTL_MS > 0) {
+    const cached = cache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      return cached.data;
+    }
   }
 
   const auth = getAuthClient();
@@ -101,7 +109,9 @@ export async function fetchSheetValues(range = "A1:Z500") {
       if (res.ok) {
         const data = await res.json();
         const values = data.values || [];
-        cache.set(cacheKey, { data: values, timestamp: Date.now() });
+        if (CACHE_TTL_MS > 0) {
+          cache.set(cacheKey, { data: values, timestamp: Date.now() });
+        }
         return values;
       } else {
         const body = await res.json().catch(() => null);
@@ -123,7 +133,10 @@ export async function fetchSheetValues(range = "A1:Z500") {
   const csvText = await res.text();
   const values = parseCsv(csvText);
 
-  // Cache response
-  cache.set(cacheKey, { data: values, timestamp: Date.now() });
+  // Cache response if caching is active
+  if (CACHE_TTL_MS > 0) {
+    cache.set(cacheKey, { data: values, timestamp: Date.now() });
+  }
+
   return values;
 }

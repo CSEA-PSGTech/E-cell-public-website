@@ -227,10 +227,10 @@ export default function Footer() {
                   ecell@psgtech.ac.in
                 </a>
                 <a
-                  href="tel:+914222572177"
+                  href="tel:+919842294606"
                   className="hover:text-[#2547FF] transition-colors block"
                 >
-                  +91 422 257 2177
+                  +91 98422 94606
                 </a>
               </div>
               <div className="pt-1">

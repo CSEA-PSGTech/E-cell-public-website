@@ -29,19 +29,35 @@ export function ContactSection({ id = "contact", className = "" }: ContactSectio
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if (!formData.fullName.trim()) {
+
+    const fullNameTrimmed = formData.fullName.trim();
+    if (!fullNameTrimmed) {
       errs.fullName = 'Please provide your full name.';
+    } else if (fullNameTrimmed.length > 120) {
+      errs.fullName = 'Full name cannot exceed 120 characters.';
     }
-    if (!formData.email.trim()) {
+
+    const emailTrimmed = formData.email.trim();
+    if (!emailTrimmed) {
       errs.email = 'Please provide your email address.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+    } else if (emailTrimmed.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrimmed)) {
       errs.email = 'Please enter a valid email address.';
     }
-    if (!formData.message.trim()) {
-      errs.message = 'Please enter your message.';
-    } else if (formData.message.trim().length < 10) {
-      errs.message = 'Please provide a message with at least 10 characters.';
+
+    const phoneTrimmed = formData.phone?.trim() || '';
+    if (phoneTrimmed && phoneTrimmed.length > 40) {
+      errs.phone = 'Phone cannot exceed 40 characters.';
     }
+
+    const messageTrimmed = formData.message.trim();
+    if (!messageTrimmed) {
+      errs.message = 'Please enter your message.';
+    } else if (messageTrimmed.length < 10) {
+      errs.message = 'Please provide a message with at least 10 characters.';
+    } else if (messageTrimmed.length > 2000) {
+      errs.message = 'Message cannot exceed 2000 characters.';
+    }
+
     return errs;
   };
 
@@ -197,6 +213,7 @@ export function ContactSection({ id = "contact", className = "" }: ContactSectio
                   placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
+                  error={errors.phone}
                   disabled={isSubmitting}
                 />
               </div>

@@ -1,15 +1,44 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Users } from 'lucide-react';
-import { teamMembers, teamVerticals, type TeamMember, type TeamVertical } from '@/data/team';
+import { Search, X, Users, Loader2 } from 'lucide-react';
+import { teamMembers as fallbackTeamMembers, teamVerticals, type TeamMember, type TeamVertical } from '@/data/team';
+import { getTeamMembers } from '@/services/memberService';
 
 export function TeamDirectory() {
   const [selectedVertical, setSelectedVertical] = useState<'All' | TeamVertical>('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [members, setMembers] = useState<TeamMember[]>(fallbackTeamMembers);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Fetch dynamic members from backend API or Google Sheets CSV export
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchDynamicMembers() {
+      try {
+        setIsLoading(true);
+        const dynamicMembers = await getTeamMembers();
+        if (isMounted && dynamicMembers && dynamicMembers.length > 0) {
+          setMembers(dynamicMembers);
+        }
+      } catch (err) {
+        console.warn('[TeamDirectory] Using fallback team members:', err);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    fetchDynamicMembers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Filter members by tab and search query
   const filteredMembers = useMemo(() => {
-    return teamMembers.filter((member) => {
+    return members.filter((member) => {
       const matchesVertical =
         selectedVertical === 'All' || member.vertical === selectedVertical;
 
@@ -23,16 +52,16 @@ export function TeamDirectory() {
 
       return matchesVertical && matchesSearch;
     });
-  }, [selectedVertical, searchQuery]);
+  }, [members, selectedVertical, searchQuery]);
 
   // Member counts per vertical
   const counts = useMemo(() => {
-    const map: Record<string, number> = { All: teamMembers.length };
-    teamMembers.forEach((m) => {
+    const map: Record<string, number> = { All: members.length };
+    members.forEach((m) => {
       map[m.vertical] = (map[m.vertical] || 0) + 1;
     });
     return map;
-  }, []);
+  }, [members]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -41,8 +70,9 @@ export function TeamDirectory() {
         {/* Card Header & Search */}
         <div className="p-6 md:p-8 pb-4 md:pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-black/[0.06]">
           <div>
-            <h2 className="text-xl md:text-2xl font-semibold text-[#0B0B0F] tracking-tight">
-              Team directory
+            <h2 className="text-xl md:text-2xl font-semibold text-[#0B0B0F] tracking-tight flex items-center gap-2">
+              <span>Team directory</span>
+              {isLoading && <Loader2 className="w-4 h-4 text-[#2547FF] animate-spin" />}
             </h2>
             <p className="text-xs md:text-sm text-neutral-500 mt-1">
               Browse by department & vertical
@@ -201,7 +231,7 @@ export function TeamDirectory() {
         {/* Directory Footer Info */}
         <div className="px-6 md:px-8 py-3.5 bg-[#F8F9FD] border-t border-black/[0.06] flex items-center justify-between text-[11px] font-mono text-neutral-500">
           <span>
-            Showing {filteredMembers.length} of {teamMembers.length} members
+            Showing {filteredMembers.length} of {members.length} members
           </span>
           <span className="hidden sm:inline">PSG College of Technology · E-Cell 2026</span>
         </div>

@@ -41,6 +41,8 @@ export interface WorksWheelProps extends Omit<
   action?: string;
   /** Triggered when the wheel is scrolled past the final card. */
   onEndReached?: () => void;
+  /** When true, wheel is frozen in ring rest state with blurred cards, no drag/scroll hijack and large COMING SOON center */
+  frozen?: boolean;
 }
 
 /* Geometry. The card is measured against the stage; everything else is measured
@@ -114,6 +116,7 @@ export function WorksWheel({
   action = "View",
   className,
   onEndReached,
+  frozen = false,
   ...props
 }: WorksWheelProps) {
   const stageRef = React.useRef<HTMLDivElement>(null);
@@ -236,15 +239,17 @@ export function WorksWheel({
 
   const to = React.useCallback(
     (next: number) => {
+      if (frozen) return;
       target.current = clamp(next, 0, last + 1);
     },
-    [last],
+    [frozen, last],
   );
 
   // Native listener, because the wheel has to be cancellable - and it only
   // cancels while it still has somewhere to go, so the page scrolls on at
   // either end instead of trapping the reader.
   React.useEffect(() => {
+    if (frozen) return;
     const el = stageRef.current;
     if (!el) return;
     const onWheel = (event: WheelEvent) => {
@@ -286,27 +291,35 @@ export function WorksWheel({
     >
       <div
         ref={stageRef}
-        tabIndex={0}
+        tabIndex={frozen ? -1 : 0}
         role="listbox"
         aria-label={label}
         aria-activedescendant={`works-wheel-${active}`}
-        className="focus-visible:outline-foreground absolute inset-0 cursor-grab touch-pan-x outline-none focus-visible:outline-2 focus-visible:-outline-offset-4 active:cursor-grabbing"
+        className={cn(
+          "focus-visible:outline-foreground absolute inset-0 outline-none",
+          frozen
+            ? "cursor-default touch-auto"
+            : "cursor-grab touch-pan-x active:cursor-grabbing focus-visible:outline-2 focus-visible:-outline-offset-4"
+        )}
         style={{ perspective: `${metrics.depth}px` }}
         onPointerDown={(event) => {
+          if (frozen) return;
           drag.current = event.clientY;
           event.currentTarget.setPointerCapture(event.pointerId);
         }}
         onPointerMove={(event) => {
-          if (drag.current === null) return;
+          if (frozen || drag.current === null) return;
           to(target.current + (drag.current - event.clientY) / DRAG_UNITS);
           drag.current = event.clientY;
         }}
         onPointerUp={() => {
+          if (frozen) return;
           // Land on an item rather than between two.
           drag.current = null;
           if (target.current > 1) to(Math.round(target.current));
         }}
         onKeyDown={(event) => {
+          if (frozen) return;
           if (event.key === "ArrowDown") to(Math.round(target.current) + 1);
           else if (event.key === "ArrowUp") to(Math.round(target.current) - 1);
           else return;
@@ -318,18 +331,21 @@ export function WorksWheel({
           className="absolute top-1/2 left-1/2 [transform-style:preserve-3d]"
         >
           {items.map((item, i) => {
-            const Tag = (item.href ? "a" : "div") as "a";
+            const Tag = (!frozen && item.href ? "a" : "div") as "a";
             return (
               <React.Fragment key={item.title}>
                 <Tag
                   id={`works-wheel-${i}`}
                   role="option"
                   aria-selected={i === active}
-                  href={item.href}
+                  href={frozen ? undefined : item.href}
                   ref={(node: HTMLElement | null) => {
                     cardRefs.current[i] = node;
                   }}
-                  className="group absolute [backface-visibility:hidden]"
+                  className={cn(
+                    "absolute [backface-visibility:hidden]",
+                    frozen ? "pointer-events-none" : "group"
+                  )}
                   style={{
                     width: metrics.cardW,
                     height: metrics.cardH,
@@ -337,14 +353,22 @@ export function WorksWheel({
                     marginTop: -metrics.cardH / 2,
                   }}
                 >
-                  <span className="bg-muted shadow-foreground/12 relative block size-full overflow-hidden rounded-lg shadow-[0_18px_40px_-18px_var(--tw-shadow-color)]">
+                  <span
+                    className={cn(
+                      "relative block size-full overflow-hidden transition-all rounded-2xl shadow-[0_16px_36px_-16px_rgba(0,0,0,0.18)]",
+                      !frozen && "bg-muted shadow-foreground/12 rounded-lg shadow-[0_18px_40px_-18px_var(--tw-shadow-color)]"
+                    )}
+                  >
                     <img
                       src={item.image}
-                      alt={item.title}
+                      alt=""
                       draggable={false}
-                      className="size-full object-cover"
+                      className={cn(
+                        "size-full object-cover",
+                        frozen && "filter blur-md grayscale contrast-[0.95] opacity-60 scale-110"
+                      )}
                     />
-                    {action && item.href ? (
+                    {!frozen && action && item.href ? (
                       <span className="bg-background/80 text-foreground pointer-events-none absolute right-3 bottom-3 flex translate-y-1 items-center gap-1 rounded-full px-2.5 py-1 text-[0.7rem] opacity-0 backdrop-blur-sm transition group-hover:translate-y-0 group-hover:opacity-100">
                         <svg
                           viewBox="0 0 12 12"
@@ -371,70 +395,81 @@ export function WorksWheel({
         </div>
       </div>
 
-      {/* Ring title and front-card title trade places across the transition.
-          Type is sized off the measured stage, not vh, so the wheel keeps its
-          proportions inside a card as well as at full bleed. */}
+      {/* Center Display: In frozen mode, elegant distinct elevated card with no border on wheel cards and no PROJECTS text */}
       <div
         ref={labelRef}
-        className="pointer-events-none absolute inset-0 grid place-items-center tracking-tight font-display font-normal text-foreground"
-        style={{ fontSize: metrics.title }}
+        className="pointer-events-none absolute inset-0 grid place-items-center tracking-tight font-display font-normal text-foreground z-30"
+        style={{ fontSize: frozen ? undefined : metrics.title }}
       >
-        {label}
-      </div>
-      <div
-        ref={titleRef}
-        className="pointer-events-auto absolute top-1/2 left-[5%] lg:left-[8%] -translate-y-1/2 opacity-0 text-foreground max-w-xs xl:max-w-sm z-20 flex flex-col gap-2.5 transition-opacity duration-300"
-      >
-        {items[active]?.domain && (
-          <div className="flex items-center">
-            <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#2547FF]">
-              {items[active]?.domain}
+        {frozen ? (
+          <div className="relative px-8 py-4 sm:px-11 sm:py-5.5 rounded-2xl sm:rounded-3xl bg-white/95 backdrop-blur-2xl border border-black/[0.06] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2),0_10px_24px_-8px_rgba(0,0,0,0.1),0_0_0_1px_rgba(255,255,255,0.8)_inset] flex items-center justify-center text-center select-none">
+            <span className="font-display font-bold tracking-tight sm:tracking-[0.01em] text-2xl sm:text-3xl lg:text-[34px] text-[#0A0A0A] uppercase leading-none drop-shadow-xs">
+              COMING SOON
             </span>
           </div>
+        ) : (
+          label
         )}
-        <h3
-          className="tracking-[-0.015em] font-display font-semibold text-2xl lg:text-3xl text-[#0A0A0A] leading-tight"
-        >
-          {items[active]?.title}
-        </h3>
-        {items[active]?.description && (
-          <p className="font-sans text-xs lg:text-sm text-[#0A0A0A]/70 line-clamp-2 leading-relaxed">
-            {items[active]?.description}
-          </p>
-        )}
-        <div className="flex items-center gap-4 pt-1">
-          {items[active]?.href && (
-            <a
-              href={items[active]?.href}
-              className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#2547FF] hover:text-[#1b3ae5] transition-colors group/link"
-            >
-              <span>Explore Project</span>
-              <span className="transition-transform group-hover/link:translate-x-0.5">→</span>
-            </a>
-          )}
-        </div>
       </div>
 
-      <ol
-        className="text-muted-foreground absolute top-1/2 -translate-y-1/2 right-[3%] lg:right-[4%] text-right leading-[2] font-sans z-20 pointer-events-auto"
-      >
-        {items.map((item, i) => (
-          <li key={item.title}>
-            <button
-              type="button"
-              onClick={() => to(i + 1)}
-              className={cn(
-                "cursor-pointer transition-colors outline-none py-1 text-xs lg:text-sm block ml-auto",
-                i === active
-                  ? "text-[#2547FF] font-semibold tracking-wide"
-                  : "text-[#0A0A0A]/40 hover:text-[#0A0A0A]/80 font-normal",
-              )}
-            >
-              <span>{item.title}</span>
-            </button>
-          </li>
-        ))}
-      </ol>
+      {!frozen && (
+        <div
+          ref={titleRef}
+          className="pointer-events-auto absolute top-1/2 left-[5%] lg:left-[8%] -translate-y-1/2 opacity-0 text-foreground max-w-xs xl:max-w-sm z-20 flex flex-col gap-2.5 transition-opacity duration-300"
+        >
+          {items[active]?.domain && (
+            <div className="flex items-center">
+              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#2547FF]">
+                {items[active]?.domain}
+              </span>
+            </div>
+          )}
+          <h3
+            className="tracking-[-0.015em] font-display font-semibold text-2xl lg:text-3xl text-[#0A0A0A] leading-tight"
+          >
+            {items[active]?.title}
+          </h3>
+          {items[active]?.description && (
+            <p className="font-sans text-xs lg:text-sm text-[#0A0A0A]/70 line-clamp-2 leading-relaxed">
+              {items[active]?.description}
+            </p>
+          )}
+          <div className="flex items-center gap-4 pt-1">
+            {items[active]?.href && (
+              <a
+                href={items[active]?.href}
+                className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#2547FF] hover:text-[#1b3ae5] transition-colors group/link"
+              >
+                <span>Explore Project</span>
+                <span className="transition-transform group-hover/link:translate-x-0.5">→</span>
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
+      {!frozen && (
+        <ol
+          className="text-muted-foreground absolute top-1/2 -translate-y-1/2 right-[3%] lg:right-[4%] text-right leading-[2] font-sans z-20 pointer-events-auto"
+        >
+          {items.map((item, i) => (
+            <li key={item.title}>
+              <button
+                type="button"
+                onClick={() => to(i + 1)}
+                className={cn(
+                  "cursor-pointer transition-colors outline-none py-1 text-xs lg:text-sm block ml-auto",
+                  i === active
+                    ? "text-[#2547FF] font-semibold tracking-wide"
+                    : "text-[#0A0A0A]/40 hover:text-[#0A0A0A]/80 font-normal",
+                )}
+              >
+                <span>{item.title}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   );
 }

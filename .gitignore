@@ -139,3 +139,11 @@ $RECYCLE.BIN/
 .fuse_hidden*
 .directory
 .Trash-*
+
+*service*account*.json
+*credentials*.json
+
+# Design generation artifacts
+DESIGN.md
+SKILL.md
+

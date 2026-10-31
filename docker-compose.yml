@@ -1,0 +1,68 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecell-backend
+    restart: unless-stopped
+    init: true
+    expose:
+      - "5000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN}
+      - GSHEET_ID=${GSHEET_ID:?GSHEET_ID is required}
+      - GSHEET_MEMBERS_RANGE=${GSHEET_MEMBERS_RANGE:-Members!A1:Z500}
+      - GSHEET_PROJECTS_RANGE=${GSHEET_PROJECTS_RANGE:-Projects!A1:Z500}
+      - GOOGLE_SERVICE_ACCOUNT_EMAIL=${GOOGLE_SERVICE_ACCOUNT_EMAIL:-}
+      - GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY=${GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY:-}
+      - CACHE_TTL_SECONDS=${CACHE_TTL_SECONDS:-300}
+      - PRIVATE_BACKEND_URL=${PRIVATE_BACKEND_URL:-}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5000/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - ecell-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=/api
+        - VITE_USE_MOCK_API=${VITE_USE_MOCK_API:-false}
+    container_name: ecell-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - ecell-network
+
+networks:
+  ecell-network:
+    driver: bridge

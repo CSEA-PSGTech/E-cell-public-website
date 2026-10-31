@@ -82,7 +82,7 @@ export function TeamSection({
   const isDownRef = useRef(false);
   const startXRef = useRef(0);
   const scrollLeftRef = useRef(0);
-  const scrollPosRef = useRef(0); // Subpixel accumulator for continuous smooth motion
+  const scrollPosRef = useRef(0);
   const velocityRef = useRef(0);
   const lastXRef = useRef(0);
   const lastTimeRef = useRef(0);
